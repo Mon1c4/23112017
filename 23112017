@@ -1,0 +1,257 @@
+  
+  # 23112017
+  
+  
+  de  nuevo
+  #calcular un MRM con la base de BM
+#dep. esperanza de vida
+# indp. tasa de fecundidad
+#       MOMORTALIDAD INFANTIL 
+#        % POBLACION URBANA
+#       
+#        NIÑOS Y NIÑAS ECONOMICAMENTE ACTIVOS
+#       TASA DE CRECIMIENTO ANUAL
+
+#UN MODELO DE CADA PAIS (DE LOS PAISES): MEXICO, ARGENTINA Y BRA
+#
+
+#$$$$$$$$$$$$$$
+#17112017
+
+#CSV COMA SEPARADO POR VALORES
+
+#Ejemplo: se estudia Y=la tasa de respiración
+#bajo puntos de goteo ¿con un recubrimiento galvanizado.
+#El agua que cae soibre el liquen contiene zinc y potasio,
+#que utilizamos como variables explicativas.
+#
+Tasa.Respiracion<-c(71,53,55,48,69,84,21,68,68)
+Potasio<-c(388,258,292,205,449,331,114,580,622)
+Zinc<-c(2414,10693,11682,12560,2464,2607,16205,2005,1825)
+Estudio<-data.frame(Tasa.Respiracion,Potasio,Zinc)
+pairs(Estudio)
+cor(Estudio)
+regnul<-lm(Tasa.Respiracion~1,data=Estudio)
+regcom<-lm(Tasa.Respiracion~.,data=Estudio)
+step(regnul,scope = list(lower=regnul,upper=regcom),direction="forward")
+
+m1<-lm(formula = Tasa.Respiracion ~ Zinc, data = Estudio)
+summary(m1)
+#Las variables son significativas
+#b1 es diferente de cero
+#Aceptamos la alternativa
+#modelo aceptable
+
+
+#Comparación de modelos
+
+#Prueba 1:Shapiro
+shapiro.test(rstudent(m1))
+#Prueba 2: DW
+install.packages(lmtest)
+require(lmtest)
+bptest(m1)
+dwtest(m1,alternative="two.sided")
+
+summary(m1)
+       
+
+#ecuación del modelo
+#y=intercept estimate+var indep estimate
+#y=b0+b1x
+y=79.4800547+(-0.0028552)X
+#interpretar el modelo
+#Por cada unidad de zinc que aumente, disminuye en .0028552 la tasa de respiración
+
+
+#------------------------------EJERCICIO---------------
+#_________________RITMO CARDIACO PERSONAS CON DIABETES___________
+
+peso<-c(74,92,63,58,78,85,85,73,62,80,72,74)
+altura<-c(168,196,170,175,162,169,190,186,176,170,176,179)
+ritmo<-c(62,75,60,71,66,62,79,74,70,66,71,69) #var dep
+edad<-c(255,31,29,64,44,41,37,35,34,29,19,50)
+card<-data.frame(ritmo,peso,altura,edad)
+pairs(card)
+cor(card)
+regnul1<-lm(ritmo~1,data=card)
+regcom1<-lm(ritmo~.,data=card)
+step(regnul1,scope = list(lower=regnul1,upper=regcom1),direction="forward")
+
+m2<-lm(formula = ritmo ~ altura, data = card)
+summary(m2)
+#Las variables son significativas
+#b1 es diferente de cero
+#Aceptamos la alternativa
+#modelo aceptable
+
+#Comparación de modelos
+#Prueba 1:Shapiro
+shapiro.test(rstudent(m2))
+#Prueba 2: DW
+install.packages(lmtest)
+require(lmtest)
+bptest(m2)
+dwtest(m2,alternative="two.sided")
+summary(m2)
+
+#ecuación del modelo
+#y=intercept estimate+var indep estimate
+#y=b0+b1x
+y=-17.1479+(0.4869)X
+#interpretar el modelo
+#pasó todas las pruebas, es significativo el modelo
+
+#------------------------------EJERCICIO---------------
+#_________________BIODIVERSIDAD___________
+
+#espam=especies amenzadas, P.E. peligro extincion, P.T. poblacion total
+espam<-c(180,117,451,99,119,511,194,464,58,1029,189,749,171,40,326,111,66,84,233)# dep
+pais<-c("ARGENTINA","BOLIVIA","BRASIL","CANADA","CHILE","COLOMBIA","COSTA RICA",
+        "ECUADOR","EL SALVADOR","EUA","GUATEMALA","MEXICO","PANAMA","PARAGUAY","PERU",
+        "REPUBLICA DOMINICANA","TRINIDAD Y TOBADO","URUGUAY","VENEZUELA")
+P.E.<-c(19,16,73,9,22,86,30,82,4,211,37,192,32,4,45,19,8,8,32)
+P.T.<-c(43847430,10887882,2061000,36229000,17909754,48653419,4909000,
+       16529000,6344722,323127513,16582469,127540423,4034119,6725308,
+       31481000,10075000,1367000,3444006,31568179)
+#as.character(pais)
+#as.numeric()
+#bio<-data.frame(espam,pais,P.E.,P.T.)
+#pairs(bio)
+#cor(bio<-data.frame(espam,P.E.,P.T.))
+#fpais<-as.factor(pais)
+#fpais
+#summary(fpais)
+#fnpais<-as.numeric(fpais)
+#fnpais
+#summary(fnpais)
+
+
+
+
+#m3<-lm(formula = espam ~ P.E., data =bio)
+#summary(m3)
+#Las variables son significativas
+#b1 es diferente de cero
+#Aceptamos la alternativa
+#modelo aceptable
+bio<-data.frame(pais,P.E.,espam,P.T.)
+bio$pais<-NULL
+pairs(bio)
+cor(bio)
+regnul2<-lm(espam~1,data=bio)
+regcom2<-lm(espam~.,data=bio)
+step(regnul2,scope = list(lower=regnul2,upper=regcom2),direction="forward")
+
+m3<-lm(formula = espam~ P.E., data = bio)
+
+summary(m3)
+
+shapiro.test(rstudent(m3))
+
+
+require(lmtest)
+bptest(m3)
+
+
+dwtest(m3,alternative = "two.sided")
+
+summary(m3)       
+
+### no cumple con los supuest
+
+
+
+
+
+
+
+
+
+
+
+#21/11/2017
+
+#DEL EJERCICIO ANTERIOR DE ZINC
+
+limEstudio<-seq(min(Estudio$Zinc),max(Estudio$Zinc),length=9)
+limEstudio<-data.frame(limEstudio)
+limEstudio
+limEstud<-predict.lm(regcom,limEstudio,interval="prediction",se.fit = TRUE,data=Estudio)
+head(limEstud$fit) #generan los limites ajustados del modelo
+
+##Para dibujar los límites
+matplot(limEstudio,limEstud$fit,type = "l")
+
+
+#TAREA: INVESTIGAR COMO INCORPORAR ETIQUETAS
+
+#**predicciones
+
+#newdata=data.frame()
+#names(Estudio)
+predict(regcom,data.frame(Zinc=10000,Potasio=40),interval = 'predict') #conocer la y puntual
+
+#DEL EJERCICOI DE RITMO CARDIACO
+peso<-c(74,92,63,58,78,85,85,73,62,80,72,74)
+altura<-c(168,196,170,175,162,169,190,186,176,170,176,179)
+ritmo<-c(62,75,60,71,66,62,79,74,70,66,71,69) #var dep
+edad<-c(255,31,29,64,44,41,37,35,34,29,19,50)
+card<-data.frame(ritmo,peso,altura,edad)
+pairs(card)
+cor(card)
+regnul1<-lm(ritmo~1,data=card)
+regcom1<-lm(ritmo~.,data=card)
+step(regnul1,scope = list(lower=regnul1,upper=regcom1),direction="forward")
+
+limcard<-seq(min(card$peso,card$altura,card$edad),max(card$peso,card$altura,card$edad),length=12)
+limcard<-data.frame(limcard)
+limcard
+limcardio<-predict.lm(regcom1,limcard,interval="prediction",se.fit = TRUE,data=card)
+head(limcardio$fit)
+predict(regcom1,data.frame(peso=60,altura=190,edad=61),interval='predict')
+
+
+
+#EJERCICIO
+
+n_caja<-c(10,15,10,20,25,18,12,14,16,22,24,17,13,30,24)
+distancia<-c(30,25,40,18,22,31,26,34,29,37,20,25,27,23,33)
+tiempo<-c(24,27,29,31,25,33,26,28,31,39,33,30,25,42,40) #var dependiente
+v1<-data.frame(n_caja,distancia,tiempo)
+View(v1)
+regnulo<-lm(tiempo~1,data=v1)
+regall<-lm(tiempo~.,data=v1)
+step(regnulo,scope=list(lower=regnulo,upper=regall),direction="forward")
+modelo<-lm(formula = tiempo ~ n_caja + distancia, data = v1)
+summary(modelo)
+
+shapiro.test(rstudent(modelo)) #no cumple normalidad
+
+install.packages(lmtest)
+require(lmtest)
+bptest(modelo)
+
+dwtest(modelo,alternative = "two.sided")
+
+#para corregir Shapiro
+#pureba de casos atipicos
+#___outlier___
+install.packages("car")
+requiere(car)
+outlierTest(regall,cutoff=.05,n.max=5,order=T)
+influencePlot(regall,id.n=5)
+#la observacion 5 indica con porblemas
+#ahora para confirmar los casos que tiene implicaciones en el modelo se aplica 
+#el grafico de distancias de cook
+#--la que tenga más distancia al valor media es la que termina generando problemas en el modelo
+
+cmod2<-cooks.distance(regall)
+cmod2
+install.packages("faraway")
+require(faraway)
+#halfnorm(cmod2,labs=)
+
+#TAREA, QUITAR ERROR 5
+#PUEDE SER CON CORCHETES
+#VOLVER A CORRER SHAPIRO
